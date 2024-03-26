@@ -1,0 +1,1 @@
+docker-compose run --rm -e XXX=test terraform-lint sh
