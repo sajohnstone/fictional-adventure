@@ -1,0 +1,42 @@
+services:
+  terraform-utils:
+    image: hashicorp/terraform:1.6.1
+    platform: linux/x86_64    
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-}
+      - AWS_REGION=${AWS_REGION:-}
+      - AWS_SDK_LOAD_CONFIG=1
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
+      - TF_VAR_databricks_client_id=${databricks_client_id:-}
+      - TF_VAR_databricks_client_secret=${databricks_client_secret:-}
+      - TF_VAR_power_bi_secret=${power_bi_secret:-}
+      - TF_VAR_power_bi_recovery_key=${power_bi_recovery_key:-}
+    entrypoint: ""
+    volumes:
+      - .:/work
+      - ~/.aws:/root/.aws
+    working_dir: /work
+   
+  python:
+    platform: linux/amd64
+    image: python:3.12-alpine
+    environment:
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-}
+      - AWS_REGION=${AWS_REGION:-}
+    entrypoint: ""
+    volumes:
+      - .:/work
+    working_dir: /work
+ 
+  terraform-lint:
+    image: ghcr.io/terraform-linters/tflint:v0.48.0
+    environment:
+      - AWS_SDK_LOAD_CONFIG=1
+    entrypoint: ""
+    volumes:
+      - .:/work
+      - ~/.aws:/root/.aws
+    working_dir: /work
+    
